@@ -1,10 +1,28 @@
-# 迷宫AI游戏项目
+![game_ui](./resources/doc_imgs/game_ui.jpg)
+
+<div align="center">
+
+<h1>简易迷宫AI游戏</h1>
+
+<img alt="Python-3.7+-blue" src="https://img.shields.io/badge/Python-3.7+-blue.svg" />
+<img alt="Pygame-2.5.0-green" src="https://img.shields.io/badge/Pygame-2.5.0-green.svg" />
+<img alt="MCP-Protocol-orange" src="https://img.shields.io/badge/MCP-Protocol-orange.svg" />
+<img alt="License-MIT" src="https://img.shields.io/badge/License-MIT-brightgreen.svg" />
+<img alt="AI_Generated" src="https://img.shields.io/badge/%F0%9F%A4%96_AI_Generated-99%25-ff69b4.svg" />
+<img alt="stars" src="https://img.shields.io/github/stars/PowerinvGames/SimpleMaze?style=social" />
+<img alt="forks" src="https://img.shields.io/github/forks/PowerinvGames/SimpleMaze?style=social" />
+
+</div>
 
 ---
 
 # 🎮 项目概述
 
-一个基于Python的迷宫游戏，集成了本地GUI界面和HTTP API服务，支持多种交互方式控制游戏进程。项目采用模块化设计，实现了游戏逻辑、UI展示和API服务的清晰分离。
+一个基于Python的迷宫游戏，集成了本地GUI界面、HTTP API服务和MCP（Model Context Protocol）服务，支持多种交互方式控制游戏进程。项目采用模块化设计，实现了游戏逻辑、UI展示、API服务和MCP服务的清晰分离。
+
+> 🚨 重要说明
+> 
+> 整个项目几乎99%的代码和文档都是基于AI生成的哦！ 🤖 由DeepSeek AI模型（DeepSeek-V3.2）协助开发完成，展示了AI在软件开发中的强大能力。
 
 # 🚀 快速开始
 
@@ -39,7 +57,10 @@ pip install -r requirements.txt
 python python/main.py
 ```
 
-启动后，游戏窗口将自动打开，同时HTTP API服务将在 http://127.0.0.1:8080 启动。
+启动后，游戏窗口将自动打开，同时：
+
+- HTTP API服务将在 http://127.0.0.1:8080 启动
+- MCP SSE服务将在 http://127.0.0.1:8000 启动
 
 # 📁 项目结构
 
@@ -68,14 +89,20 @@ SimpleMaze/
 │   │       ├── ControlPanel.py
 │   │       ├── FunctionPanel.py
 │   │       └── MazePanel.py
-│   ├── server/                       # HTTP服务器
-│   │   └── HttpGameServer.py
+│   ├── server/                       # 服务器
+│   │   ├── HttpGameServer.py         # HTTP服务器
+│   │   └── McpGameServer.py          # MCP服务器
 │   └── utils/                        # 工具类
 │       └── FontManager.py
 ├── resources/                        # 资源文件
 │   ├── HarmonyOS_SansSC_Regular.ttf  # 中文字体
+│   ├── LICENSE.txt                   # 中文字体许可证
+│   └── doc_imgs                      # 文档图片
+│       ├── game_ui.jpg
+│       └── mcp_client_demo.jpg
+├── .gitignore
 ├── requirements.txt                  # 项目依赖
-└── README.md                         # 项目说明
+├── README.md                         # 项目说明
 └── LICENSE                           # 许可证
 ```
 
@@ -90,6 +117,7 @@ SimpleMaze/
    - R键：重置当前关卡
    - N键：生成新关卡
 3. HTTP API：支持程序化控制，便于AI集成
+4. MCP协议：通过标准MCP协议供AI自然语言调用
 
 ## 游戏机制
 
@@ -154,6 +182,202 @@ state = requests.get("http://127.0.0.1:8080/api/state").json()
 requests.post("http://127.0.0.1:8080/api/reset")
 ```
 
+# 🤖 MCP (Model Context Protocol) 服务
+
+## MCP服务器信息
+
+- 服务器地址：http://127.0.0.1:8000
+- 协议：SSE (Server-Sent Events)
+- 框架：fastmcp
+
+## MCP端点
+
+```text
+GET    /sse           # SSE事件流
+POST   /tools/call    # 调用MCP工具
+GET    /tools         # 获取工具列表
+```
+
+## 可用MCP工具
+
+### 1. get_game_state
+
+**描述**：获取当前游戏状态信息
+
+**使用示例**：
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "tools/call",
+  "params": {
+    "name": "get_game_state",
+    "arguments": {}
+  }
+}
+```
+
+### 2. move_player
+
+**描述**：移动玩家到指定方向
+
+**参数**：
+
+- direction：移动方向，可选值：up(上), down(下), left(左), right(右), wait(等待)
+
+**使用示例**：
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 2,
+  "method": "tools/call",
+  "params": {
+    "name": "move_player",
+    "arguments": {"direction": "up"}
+  }
+}
+```
+
+### 3. reset_level
+
+**描述**：重置当前关卡，将玩家放回起点
+
+**使用示例**：
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 3,
+  "method": "tools/call",
+  "params": {
+    "name": "reset_level",
+    "arguments": {}
+  }
+}
+```
+
+### 4. new_level
+
+**描述**：生成全新迷宫关卡
+
+**使用示例**：
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 4,
+  "method": "tools/call",
+  "params": {
+    "name": "new_level",
+    "arguments": {}
+  }
+}
+```
+
+## AI集成配置（示例）
+
+### CherryStudio 配置
+
+在 CherryStudio 配置文件中添加：
+
+```json
+{
+  "mcpServers": {
+    "maze_game": {
+      "name": "SimpleMaze迷宫游戏API",
+      "description": "",
+      "baseUrl": "http://localhost:8000/sse",
+      "command": "python",
+      "args": [
+        "python/server/mcp/McpServer.py"
+      ],
+      "env": {},
+      "isActive": true,
+      "type": "sse",
+      "longRunning": true,
+      "provider": "Powerinv",
+      "providerUrl": "https://github.com/PowerinvGames/SimpleMaze",
+      "logoUrl": "",
+      "tags": [
+        "游戏"
+      ]
+    }
+  }
+}
+```
+
+![mcp_list](./resources/doc_imgs/mcp_list.jpg)
+
+### 其他MCP客户端
+
+任何支持MCP协议的客户端都可以通过以下方式连接：
+
+- SSE端点：http://127.0.0.1:8000/sse
+- 工具调用端点：http://127.0.0.1:8000/tools/call
+
+## MCP使用示例
+
+### Python客户端示例
+
+```python
+import requests
+import json
+
+# 调用MCP工具
+def call_mcp_tool(tool_name, arguments=None):
+    url = "http://127.0.0.1:8000/tools/call"
+    payload = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/call",
+        "params": {
+            "name": tool_name,
+            "arguments": arguments or {}
+        }
+    }
+    
+    response = requests.post(url, json=payload)
+    return response.json()
+
+# 获取游戏状态
+result = call_mcp_tool("get_game_state")
+print(result)
+
+# 移动玩家
+result = call_mcp_tool("move_player", {"direction": "right"})
+print(result)
+
+# 重置关卡
+result = call_mcp_tool("reset_level")
+print(result)
+
+# 生成新关卡
+result = call_mcp_tool("new_level")
+print(result)
+```
+
+### AI自然语言调用示例
+
+AI可以直接使用自然语言调用工具，例如：
+
+```text
+用户：告诉我当前游戏状态
+AI：调用 get_game_state() 工具
+
+用户：让玩家向右移动
+AI：调用 move_player({"direction": "right"}) 工具
+
+用户：重新开始这一关
+AI：调用 reset_level() 工具
+
+用户：生成一个新的迷宫
+AI：调用 new_level() 工具
+```
+
+![mcp_client_demo](./resources/doc_imgs/mcp_client_demo.jpg)
+
 # 🛠️ 开发说明
 
 ## 设计模式
@@ -161,6 +385,15 @@ requests.post("http://127.0.0.1:8080/api/reset")
 - **事件驱动架构**：使用事件总线解耦UI与游戏逻辑
 - **模块化组件**：UI元素封装为独立组件
 - **MVC分离**：模型、视图、控制器清晰分离
+- **协议分离**：HTTP API与MCP协议独立实现
+
+## MCP服务器特点
+
+- **精简核心功能**：只提供4个核心工具，对应HTTP API的核心功能
+- **独立运行**：MCP服务器独立于HTTP服务器，使用不同端口
+- **标准协议**：基于官方MCP协议，兼容所有MCP客户端
+- **自然语言友好**：工具设计简洁，适合AI自然语言调用
+- **异步支持**：完全异步设计，性能优秀
 
 ## 字体配置
 
@@ -183,10 +416,10 @@ python python/main.py --help
 
 可用参数：
 
-- --host：HTTP服务器主机地址（默认：127.0.0.1）
-- --port：HTTP服务器端口（默认：8080）
-- --maze-width：迷宫宽度（默认：55）
-- --maze-height：迷宫高度（默认：35）
+- `--host`：HTTP服务器主机地址（默认：127.0.0.1）
+- `--port`：HTTP服务器端口（默认：8080）
+- `--maze-width`：迷宫宽度（默认：55）
+- `--maze-height`：迷宫高度（默认：35）
 
 # 🔧 故障排除
 
@@ -198,9 +431,14 @@ python python/main.py --help
 2. **端口占用**
    - 默认使用8080端口，如被占用会自动尝试其他端口
    - 可通过 --port 参数指定其他端口
-3. **依赖安装失败**
+3. MCP连接失败
+   - 确保MCP服务器正在运行（与主程序一起启动）
+   - 检查端口是否被防火墙阻止
+   - 验证SSE连接：访问 http://127.0.0.1:8000/sse
+4. **依赖安装失败**
    - 确保使用Python 3.7+
-   - 尝试升级pip：pip install --upgrade pip
+   - 尝试升级pip：`pip install --upgrade pip`
+   - 确保fastmcp正确安装：`pip install fastmcp`
 
 ## 调试模式
 
@@ -212,14 +450,14 @@ logger.setLevel(logging.DEBUG)  # 改为DEBUG级别
 
 # 📄 许可证
 
-本项目采用 MIT 许可证 - 详见 LICENSE 文件。
+本项目采用 MIT 许可证 - 详见 [LICENSE](./LICENSE) 文件。
 
 # 🤝 贡献指南
 
 1. Fork 本仓库
-2. 创建功能分支：git checkout -b feature/新功能
-3. 提交更改：git commit -m '添加新功能'
-4. 推送到分支：git push origin feature/新功能
+2. 创建功能分支：`git checkout -b feature/新功能`
+3. 提交更改：`git commit -m '添加新功能'`
+4. 推送到分支：`git push origin feature/新功能`
 5. 提交 Pull Request
 
 # 📞 联系方式
@@ -227,5 +465,8 @@ logger.setLevel(logging.DEBUG)  # 改为DEBUG级别
 如有问题或建议，请提交GitHub Issue。
 
 ---
+
+![logo](https://img.shields.io/badge/GitHub-PowerinvGames/SimpleMaze-181717?style=for-the-badge&logo=github)
+![logo](https://img.shields.io/badge/Generated_by-DeepSeek_AI-06c755?style=for-the-badge&logo=ai)
 
 开始你的迷宫冒险吧！ 🚶‍♂️➡️🎯

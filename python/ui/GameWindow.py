@@ -4,18 +4,18 @@
 """
 import pygame
 import pygame_gui
-from typing import Optional, Dict, Any
+
+from python.app.GameEventBus import EventType, GameEventBus
+from python.constants import *
 from python.core.game.MazeGameService import MazeGameService
+from python.logger import logger
 from python.server.HttpGameServer import HttpGameServer
-from python.app.GameEventBus import GameEventBus, EventType
 from python.ui.MazeRenderer import MazeRenderer
-from python.ui.components.GameInfoPanel import GameInfoPanel
 from python.ui.components.ControlPanel import ControlPanel
 from python.ui.components.FunctionPanel import FunctionPanel
+from python.ui.components.GameInfoPanel import GameInfoPanel
 from python.ui.components.MazePanel import MazePanel
 from python.utils.FontManager import FontManager
-from python.constants import *
-from python.logger import logger
 
 
 class GameWindow:

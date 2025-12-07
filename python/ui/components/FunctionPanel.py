@@ -2,9 +2,11 @@
 """
 功能面板组件
 """
+from typing import Callable
+
 import pygame
 import pygame_gui
-from typing import Callable, Dict
+
 from python.constants import *
 from python.logger import logger
 
