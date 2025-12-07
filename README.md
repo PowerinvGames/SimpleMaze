@@ -16,7 +16,7 @@
 
 ---
 
-# 🎮 项目概述
+# 一、🎮 项目概述
 
 一个基于Python的迷宫游戏，集成了本地GUI界面、HTTP API服务和MCP（Model Context Protocol）服务，支持多种交互方式控制游戏进程。项目采用模块化设计，实现了游戏逻辑、UI展示、API服务和MCP服务的清晰分离。
 
@@ -24,14 +24,14 @@
 > 
 > 整个项目几乎99%的代码和文档都是基于AI生成的哦！ 🤖 由DeepSeek AI模型（DeepSeek-V3.2）协助开发完成，展示了AI在软件开发中的强大能力。
 
-# 🚀 快速开始
+# 二、🚀 快速开始
 
-## 环境要求
+## 2.1  环境要求
 
 - Python 3.7+
 - 依赖包：参见 requirements.txt
 
-## 安装步骤
+## 2.2  安装步骤
 
 ```bash
 # 克隆项目
@@ -51,7 +51,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## 运行游戏
+## 2.3  运行游戏
 
 ```bash
 python python/main.py
@@ -62,7 +62,7 @@ python python/main.py
 - HTTP API服务将在 http://127.0.0.1:8080 启动
 - MCP SSE服务将在 http://127.0.0.1:8000 启动
 
-# 📁 项目结构
+# 三、📁 项目结构
 
 ```text
 SimpleMaze/
@@ -106,9 +106,9 @@ SimpleMaze/
 └── LICENSE                           # 许可证
 ```
 
-# 🎯 游戏特性
+# 四、🎯 游戏特性
 
-## 三种控制方式
+## 4.1  三种控制方式
 
 1. 本地GUI界面：可视化操作，支持按钮和键盘控制
 2. 键盘快捷键：
@@ -119,22 +119,22 @@ SimpleMaze/
 3. HTTP API：支持程序化控制，便于AI集成
 4. MCP协议：通过标准MCP协议供AI自然语言调用
 
-## 游戏机制
+## 4.2  游戏机制
 
 - 随机生成迷宫（55×35大小）
 - 玩家从左下角出发，目标到达右上角出口
 - 实时显示移动次数和位置信息
 - 到达终点时显示胜利界面
 
-# 🌐 HTTP API接口
+# 五、🌐 HTTP API接口
 
-## 基础信息
+## 5.1  基础信息
 
 - 服务器地址：http://127.0.0.1:8080
 - 请求格式：JSON
 - 响应格式：JSON
 
-## 可用接口
+## 5.2  可用接口
 
 ```text
 GET    /api/health     # 健康检查
@@ -144,7 +144,7 @@ POST   /api/reset      # 重置当前关卡
 POST   /api/new-level  # 生成新关卡
 ```
 
-## 游戏状态数据结构
+## 5.3  游戏状态数据结构
 
 ```json
 {
@@ -156,7 +156,7 @@ POST   /api/new-level  # 生成新关卡
 }
 ```
 
-## 移动方向
+## 5.4  移动方向
 
 - `up`：向上移动
 - `down`：向下移动
@@ -164,7 +164,7 @@ POST   /api/new-level  # 生成新关卡
 - `right`：向右移动
 - `wait`：等待（不移动）
 
-## API调用示例
+## 5.5  API调用示例
 
 ```python
 import requests
@@ -182,15 +182,15 @@ state = requests.get("http://127.0.0.1:8080/api/state").json()
 requests.post("http://127.0.0.1:8080/api/reset")
 ```
 
-# 🤖 MCP (Model Context Protocol) 服务
+# 六、🤖 MCP (Model Context Protocol) 服务
 
-## MCP服务器信息
+## 6.1  MCP服务器信息
 
 - 服务器地址：http://127.0.0.1:8000
 - 协议：SSE (Server-Sent Events)
 - 框架：fastmcp
 
-## MCP端点
+## 6.2  MCP端点
 
 ```text
 GET    /sse           # SSE事件流
@@ -198,9 +198,9 @@ POST   /tools/call    # 调用MCP工具
 GET    /tools         # 获取工具列表
 ```
 
-## 可用MCP工具
+## 6.3  可用MCP工具
 
-### 1. get_game_state
+### 6.3.1  get_game_state
 
 **描述**：获取当前游戏状态信息
 
@@ -218,7 +218,7 @@ GET    /tools         # 获取工具列表
 }
 ```
 
-### 2. move_player
+### 6.3.2  move_player
 
 **描述**：移动玩家到指定方向
 
@@ -240,7 +240,7 @@ GET    /tools         # 获取工具列表
 }
 ```
 
-### 3. reset_level
+### 6.3.3  reset_level
 
 **描述**：重置当前关卡，将玩家放回起点
 
@@ -258,7 +258,7 @@ GET    /tools         # 获取工具列表
 }
 ```
 
-### 4. new_level
+### 6.3.4  new_level
 
 **描述**：生成全新迷宫关卡
 
@@ -276,9 +276,9 @@ GET    /tools         # 获取工具列表
 }
 ```
 
-## AI集成配置（示例）
+## 6.4  AI集成配置（示例）
 
-### CherryStudio 配置
+### 6.4.1  CherryStudio 配置
 
 在 CherryStudio 配置文件中添加：
 
@@ -310,16 +310,16 @@ GET    /tools         # 获取工具列表
 
 ![mcp_list](./resources/doc_imgs/mcp_list.jpg)
 
-### 其他MCP客户端
+### 6.4.2  其他MCP客户端
 
 任何支持MCP协议的客户端都可以通过以下方式连接：
 
 - SSE端点：http://127.0.0.1:8000/sse
 - 工具调用端点：http://127.0.0.1:8000/tools/call
 
-## MCP使用示例
+## 6.5  MCP使用示例
 
-### Python客户端示例
+### 6.5.1  Python客户端示例
 
 ```python
 import requests
@@ -358,7 +358,7 @@ result = call_mcp_tool("new_level")
 print(result)
 ```
 
-### AI自然语言调用示例
+### 6.5.2  AI自然语言调用示例
 
 AI可以直接使用自然语言调用工具，例如：
 
@@ -378,16 +378,16 @@ AI：调用 new_level() 工具
 
 ![mcp_client_demo](./resources/doc_imgs/mcp_client_demo.jpg)
 
-# 🛠️ 开发说明
+# 七、🛠️ 开发说明
 
-## 设计模式
+## 7.1  设计模式
 
 - **事件驱动架构**：使用事件总线解耦UI与游戏逻辑
 - **模块化组件**：UI元素封装为独立组件
 - **MVC分离**：模型、视图、控制器清晰分离
 - **协议分离**：HTTP API与MCP协议独立实现
 
-## MCP服务器特点
+## 7.2  MCP服务器特点
 
 - **精简核心功能**：只提供4个核心工具，对应HTTP API的核心功能
 - **独立运行**：MCP服务器独立于HTTP服务器，使用不同端口
@@ -395,20 +395,20 @@ AI：调用 new_level() 工具
 - **自然语言友好**：工具设计简洁，适合AI自然语言调用
 - **异步支持**：完全异步设计，性能优秀
 
-## 字体配置
+## 7.3  字体配置
 
 项目中包含中文字体文件（HarmonyOS Sans SC），确保中文正常显示。如需更换字体，请：
 
 1. 将新字体文件放入 resources/ 目录
 2. 在 python/constants.py 中更新 ResourcePaths.FONT_FILE 路径
 
-## 日志系统
+## 7.4  日志系统
 
 - 使用Python标准logging模块
 - 日志级别：INFO
 - 输出到控制台
 
-# 📋 命令行参数
+# 八、📋 命令行参数
 
 ```bash
 python python/main.py --help
@@ -421,9 +421,9 @@ python python/main.py --help
 - `--maze-width`：迷宫宽度（默认：55）
 - `--maze-height`：迷宫高度（默认：35）
 
-# 🔧 故障排除
+# 九、🔧 故障排除
 
-## 常见问题
+## 9.1  常见问题
 
 1. **中文显示乱码**
    - 确保 resources/HarmonyOS_SansSC_Regular.ttf 文件存在
@@ -440,7 +440,7 @@ python python/main.py --help
    - 尝试升级pip：`pip install --upgrade pip`
    - 确保fastmcp正确安装：`pip install fastmcp`
 
-## 调试模式
+## 9.2  调试模式
 
 如需更详细的日志，可修改 python/logger.py 中的日志级别：
 
@@ -448,11 +448,11 @@ python python/main.py --help
 logger.setLevel(logging.DEBUG)  # 改为DEBUG级别
 ```
 
-# 📄 许可证
+# 十、📄 许可证
 
 本项目采用 MIT 许可证 - 详见 [LICENSE](./LICENSE) 文件。
 
-# 🤝 贡献指南
+# 十一、🤝 贡献指南
 
 1. Fork 本仓库
 2. 创建功能分支：`git checkout -b feature/新功能`
@@ -460,7 +460,7 @@ logger.setLevel(logging.DEBUG)  # 改为DEBUG级别
 4. 推送到分支：`git push origin feature/新功能`
 5. 提交 Pull Request
 
-# 📞 联系方式
+# 十二、📞 联系方式
 
 如有问题或建议，请提交GitHub Issue。
 
