@@ -21,12 +21,12 @@ class MazePanel:
         Args:
             ui_manager: UI管理器
             container_rect: 面板位置和大小
-            game_service: 游戏服务
+            game_service: 游戏服务（可能为None）
             maze_renderer: 迷宫渲染器
         """
         self.manager = ui_manager
         self.container_rect = container_rect
-        self.game_service = game_service
+        self.game_service = game_service  # 可能为None
         self.maze_renderer = maze_renderer
         self.maze_surface = None
 
@@ -36,8 +36,11 @@ class MazePanel:
         # 创建面板
         self._create_panel()
 
-        # 初始刷新
-        self._refresh_maze_surface()
+        # 只有在game_service不为None时才刷新迷宫Surface
+        if self.game_service:
+            self._refresh_maze_surface()
+        else:
+            logger.warning("MazePanel初始化时game_service为None，跳过初始化迷宫Surface")
 
         logger.debug("迷宫显示面板初始化完成")
 
@@ -51,8 +54,13 @@ class MazePanel:
 
     def _refresh_maze_surface(self):
         """刷新迷宫Surface"""
+        if not self.game_service:
+            logger.warning("game_service为None，无法刷新迷宫Surface")
+            return
+
         maze_data = self.game_service.get_maze_data()
         if not maze_data:
+            logger.warning("无法获取迷宫数据")
             return
 
         # 计算迷宫原始尺寸
@@ -66,6 +74,9 @@ class MazePanel:
 
     def update(self):
         """更新面板显示"""
+        if not self.game_service or not self.maze_surface:
+            return
+
         maze_data = self.game_service.get_maze_data()
         game_state = self.game_service.get_current_state()
 
